@@ -1,9 +1,6 @@
-const mssql = require("mssql");
-const config = require("../config/databaseConfig");
-async function User(Email) {
-  let sql = await mssql.connect(config);
-  if (sql.connected) {
-    let results = await sql
+async function User(Email, pool) {
+  if (pool.connected) {
+    let results = await pool
       .request()
       .input("Email", Email)
       .execute("Wechat.GetUserByEmail");
