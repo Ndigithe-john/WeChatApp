@@ -9,7 +9,6 @@ const sql = require("mssql");
 const { createClient } = require("redis");
 const { v4 } = require("uuid");
 const globalErrorHandlers = require("./src/controllers/errorControllers");
-const { connect } = require("mssql");
 const app = express();
 app.use(express.json());
 async function startServer() {

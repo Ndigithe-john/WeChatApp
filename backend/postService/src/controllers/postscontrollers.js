@@ -126,5 +126,30 @@ async function deletePost(req, res, next) {
     );
   }
 }
+async function getFollowingPosts(req, res, next) {
+  try {
+    const { pool } = req;
+    const user = req.user;
+    if (pool.connected) {
+      const followers_posts = await pool
+        .request()
+        .input("UserID", user.UserID)
+        .execute("Wechat.GetPostsOfFollowing");
+      res.status(200).json({
+        status: "success",
+        posts: followers_posts.recordsets[0],
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return next(new AppError("Internal server Error"), 500);
+  }
+}
 
-module.exports = { posts, updatePosts, createPosts, deletePost };
+module.exports = {
+  posts,
+  updatePosts,
+  createPosts,
+  deletePost,
+  getFollowingPosts,
+};

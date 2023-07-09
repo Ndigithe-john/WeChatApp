@@ -13,7 +13,7 @@ const userRoutes = express.Router();
 
 userRoutes.post("/signup", signUP);
 userRoutes.post("/login", login);
-userRoutes.get("/logout", (req, res, next) => {
+userRoutes.post("/logout", (req, res, next) => {
   req.session.destroy();
   res.send("user logged out");
 });
