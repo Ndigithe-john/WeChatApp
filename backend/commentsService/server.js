@@ -6,6 +6,8 @@ const app = express();
 const commentsRoutes = require("./src/routes/commentsRoutes");
 const globalErrorHandlers = require("./src/controllers/errorControllers");
 const AppError = require("./src/utils/appError");
+const notificationRoute = require("./src/routes/notificationsRoute");
+const likesRoute = require("./src/routes/likesRoutes");
 app.use(express.json());
 
 async function commentsServer() {
@@ -15,7 +17,9 @@ async function commentsServer() {
       req.pool = pool;
       next();
     });
+    app.use("/users", likesRoute);
     app.use("/users", commentsRoutes);
+    app.use("/users", notificationRoute);
     app.all("*", (req, res, next) => {
       next(new AppError(`Can't find ${req.originalUrl} on this server`));
     });
