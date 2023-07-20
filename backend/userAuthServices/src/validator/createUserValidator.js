@@ -13,3 +13,23 @@ function createUserValidator(body) {
 }
 
 module.exports = createUserValidator;
+
+// const { createUserSchema } = require("../model/createUserModel");
+
+// function createUserValidator(body) {
+//   const { error, value } = createUserSchema.validate(body, {
+//     abortEarly: false,
+//   });
+
+//   if (error) {
+//     const validationErrors = {};
+//     error.details.forEach((err) => {
+//       validationErrors[err.context.key] = err.message;
+//     });
+//     return { validationErrors };
+//   } else {
+//     return { value };
+//   }
+// }
+
+// module.exports = createUserValidator;

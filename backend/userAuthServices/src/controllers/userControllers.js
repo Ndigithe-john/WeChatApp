@@ -26,7 +26,7 @@ async function signUP(req, res) {
     let { value } = createUserValidator(newUser);
     let hashed_password = await bcrypt.hash(Password, 8);
 
-    if (sql.connected) {
+    if (pool.connected) {
       let results = await pool
         .request()
         .input("FirstName", FirstName)
@@ -51,9 +51,9 @@ async function login(req, res, next) {
   try {
     const login_body = req.body;
     const { pool } = req;
-    const { value } = loginValidator(login_body);
+    // const { value } = loginValidator(login_body);
     const { Email, Password } = login_body;
-    console.log(value);
+    // console.log(value);
     let user = await User(Email, pool);
     console.log(user);
     if (user) {
@@ -75,6 +75,7 @@ async function login(req, res, next) {
     if (!Email || !Password) {
       return next(new AppError("Please provide both email and password"), 400);
     }
+
     if (!user) {
       return next(new AppError("Incorrect email or password"), 401);
     }

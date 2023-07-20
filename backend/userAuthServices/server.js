@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
 const userRoutes = require("./src/routes/userRoutes");
 const AppError = require("./src/utils/appError");
 const session = require("express-session");
@@ -11,6 +12,12 @@ const { v4 } = require("uuid");
 const globalErrorHandlers = require("./src/controllers/errorControllers");
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 async function startServer() {
   const tenHours = 60 * 60 * 10 * 1000;
 

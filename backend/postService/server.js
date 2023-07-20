@@ -5,18 +5,25 @@ const globalErrorHandlers = require("./src/controllers/errorController");
 const app = express();
 const postroutes = require("./src/routes/postsroutes");
 const sql = require("mssql");
+const cors = require("cors");
 const config = require("./src/config/dbConfig");
 
 app.use(express.json());
+// app.use((req, res, next) => {
+//   console.log(req.headers.origin);
+// });
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 async function postServer() {
   try {
     let pool = await sql.connect(config);
+
     console.log(pool.connected);
     app.use((req, res, next) => {
       req.pool = pool;
       next();
     });
+
     app.use("/users", postroutes);
     app.all("*", (req, res, next) => {
       next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
