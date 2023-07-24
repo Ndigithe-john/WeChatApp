@@ -5,6 +5,7 @@ const {
   forgotPassword,
   resetPassword,
   profileUpdate,
+  myAccount,
 } = require("../controllers/userControllers");
 
 const manageSessions = require("../middlewares/userAuthentication");
@@ -20,5 +21,5 @@ userRoutes.post("/logout", (req, res, next) => {
 userRoutes.post("/forgotPassword", forgotPassword);
 userRoutes.post("/profile", manageSessions, profileUpdate);
 userRoutes.patch("/resetPassword/:token", resetPassword);
-// userRoutes.use(manageSessions);
+userRoutes.get("/account", manageSessions, myAccount);
 module.exports = userRoutes;

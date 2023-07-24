@@ -1,5 +1,6 @@
 const express = require("express");
 const mssql = require("mssql");
+const cors = require("cors");
 require("dotenv").config();
 const config = require("./src/config/dbconfig");
 const app = express();
@@ -8,7 +9,9 @@ const globalErrorHandlers = require("./src/controllers/errorControllers");
 const AppError = require("./src/utils/appError");
 const notificationRoute = require("./src/routes/notificationsRoute");
 const likesRoute = require("./src/routes/likesRoutes");
+
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 async function commentsServer() {
   try {

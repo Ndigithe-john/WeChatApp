@@ -11,6 +11,8 @@ const createUserValidator = require("../validator/createUserValidator");
 const User = require("../utils/getUser");
 const loginValidator = require("../validator/loginValidator");
 const resetPasswordValidator = require("../validator/resetPasswordValidator");
+const profileValidator = require("../validator/profileUpdateValidator");
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -219,12 +221,16 @@ async function resetPassword(req, res, next) {
 async function profileUpdate(req, res, next) {
   try {
     const profile_update = req.body;
-    const { UserID, UserName, Email, Profile, Bio } = profile_update;
+    const { value } = profileValidator(profile_update);
+    console.log(value);
+    const user = req.session.user;
+    console.log(user.UserID);
+    const { UserName, Email, Profile, Bio } = profile_update;
     const sql = await mssql.connect(config);
     if (sql.connected) {
       let update_results = await sql
         .request()
-        .input("UserID", UserID)
+        .input("UserID", user.UserID)
         .input("UserName", UserName)
         .input("Email", Email)
         .input("ProfilePhoto", Profile)
@@ -237,7 +243,7 @@ async function profileUpdate(req, res, next) {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return next(
       new AppError(
         "There was an error updating your profile. Please try again after sometime"
@@ -247,10 +253,33 @@ async function profileUpdate(req, res, next) {
   }
 }
 
+async function myAccount(req, res, next) {
+  try {
+    let user = req.session.user;
+    console.log(user.UserID);
+    const { pool } = req;
+    if (pool.connected) {
+      console.log("connected to database");
+      const results = await pool
+        .request()
+        .input("UserID", user.UserID)
+        .execute("GetUserAccountDetails");
+      res.status(200).json({
+        status: "success",
+        myacc: results.recordset,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return Error(new AppError("Error retriving your account details"), 500);
+  }
+}
+
 module.exports = {
   signUP,
   login,
   forgotPassword,
   resetPassword,
   profileUpdate,
+  myAccount,
 };

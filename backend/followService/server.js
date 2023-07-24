@@ -3,10 +3,12 @@ const config = require("./src/config/dbconfig");
 const AppError = require("./src/Utils/appError");
 const globalErrorHandlers = require("./src/controllers/errorControllers");
 const mssql = require("mssql");
+const cors = require("cors");
 const followroute = require("./src/routes/followRoutes");
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 async function followerServer() {
   try {
